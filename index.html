@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>HeyGen Hacky Embed</title>
+  <title>HeyGen Fullscreen Hack</title>
   <style>
     html, body {
-      margin:0; padding:0;
-      width:100%; height:100%;
-      overflow:hidden;
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
     }
-    /* Bottone centrato */
+    /* Bottone “Chat Now” centrato */
     #myChatBtn {
       position: fixed;
       top: 50%;
@@ -29,54 +29,59 @@
 </head>
 <body>
 
-  <!-- Script ufficiale HeyGen -->
+  <!-- 1) Script HeyGen: genera l’iframe ma lo nasconde subito -->
   <script>
     !function(window){
       const host = "https://labs.heygen.com";
-      const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWF...TU1MzYwJ9&inIFrame=1";
+      const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
 
+      // crea il wrapper full‐screen, ma nascosto
       const wrap = document.createElement("div");
-      Object.assign(wrap.style, {
-        position:"fixed", top:"0", left:"0", right:"0", bottom:"0",
-        zIndex:"9999", overflow:"hidden"
-      });
       wrap.id = "heygen-streaming-embed";
+      Object.assign(wrap.style, {
+        position: "fixed",
+        top:      "0",
+        left:     "0",
+        right:    "0",
+        bottom:   "0",
+        display:  "none",   // <-- nascosto di default
+        zIndex:   "9999",
+        overflow: "hidden"
+      });
 
-      const cont = document.createElement("div");
-      cont.id = "heygen-streaming-container";
-      cont.style.width  = "100%";
-      cont.style.height = "100%";
-
+      // iframe con l’embed vero e proprio
       const iframe = document.createElement("iframe");
       iframe.src             = url;
       iframe.allow           = "microphone";
       iframe.allowFullscreen = true;
       Object.assign(iframe.style, {
-        border:"none", width:"100%", height:"100%", display:"block"
+        border: "none",
+        width:  "100%",
+        height: "100%"
       });
 
-      cont.appendChild(iframe);
-      wrap.appendChild(cont);
+      wrap.appendChild(iframe);
       document.body.appendChild(wrap);
 
-      window.addEventListener("message", e => {
-        if(e.origin===host && e.data?.type==="streaming-embed" && e.data.action==="init"){
-          wrap.classList.add("show","expand");
-          setTimeout(()=>{
-            wrap.querySelector("iframe").style.pointerEvents = "none";
-          },500);
+      // rendiamo disponibile il wrapper a livello globale
+      window.heygenEmbedWrap = wrap;
+
+      // 3) ascoltiamo il pulsante “X” interno (action==='hide') per chiudere
+      window.addEventListener("message", (e) => {
+        if (e.origin === host && e.data?.type === "streaming-embed" && e.data.action === "hide") {
+          wrap.style.display = "none";
         }
       });
     }(globalThis);
   </script>
 
-  <!-- Custom Chat button, ora centrato -->
+  <!-- 2) Bottone “Chat Now” tuo, al centro -->
   <button id="myChatBtn">Chat Now</button>
   <script>
-    const wrap = document.getElementById("heygen-streaming-embed");
-    document.getElementById("myChatBtn").addEventListener("click", () => {
-      wrap.classList.toggle("expand");
-    });
+    document.getElementById("myChatBtn").onclick = () => {
+      // al click mostro il wrapper che contiene l’iframe HeyGen
+      window.heygenEmbedWrap.style.display = "block";
+    };
   </script>
 
 </body>
