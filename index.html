@@ -7,27 +7,53 @@
       html, body {
         margin: 0;
         padding: 0;
-        height: 100%;
         width: 100%;
+        height: 100%;
         overflow: hidden;
-      }
-      iframe {
-        position: fixed;
-        top: 0;
-        left: 0;
-        border: none;
-        width: 100vw;
-        height: 100vh;
       }
     </style>
   </head>
   <body>
-    <!-- SOLO quest’iframe: NIENTE script aggiuntivi -->
-    <iframe
-      src="https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1"
-      allow="microphone"
-      title="HeyGen Avatar"
-      allowfullscreen>
-    </iframe>
+    <script>
+      !function(window){
+        const host = "https://labs.heygen.com";
+        const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
+
+        // wrapper che copre esattamente tutto lo schermo
+        const wrapDiv = document.createElement("div");
+        Object.assign(wrapDiv.style, {
+          position:     "fixed",
+          top:          "0",
+          right:        "0",
+          bottom:       "0",
+          left:         "0",
+          margin:       "0",
+          padding:      "0",
+          border:       "none",
+          borderRadius: "0",
+          boxShadow:    "none",
+          zIndex:       "9999",
+          overflow:     "hidden"
+        });
+
+        // iframe
+        const iframe = document.createElement("iframe");
+        iframe.src               = url;
+        iframe.allow             = "microphone";
+        iframe.title             = "HeyGen Avatar";
+        iframe.allowFullscreen   = true;
+        Object.assign(iframe.style, {
+          border:  "none",
+          width:   "100%",
+          height:  "100%",
+          display: "block",
+          margin:  "0",
+          padding: "0"
+        });
+
+        wrapDiv.appendChild(iframe);
+        document.body.appendChild(wrapDiv);
+      }(globalThis);
+    </script>
   </body>
 </html>
