@@ -2,41 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8"/>
-    <title>Nova Human DH </title>
+    <title>HeyGen Fullscreen Forced</title>
     <style>
-      /* Reset del body per full‐screen */
+      /* Reset generale */
       html, body {
         margin: 0;
         padding: 0;
         width: 100%;
         height: 100%;
         overflow: hidden;
-      }
-      /* Override del widget HeyGen */
-      #heygen-streaming-embed,
-      #heygen-streaming-embed.show,
-      #heygen-streaming-embed.expand {
-        position: fixed   !important;
-        top:      0       !important;
-        left:     0       !important;
-        width:    100vw   !important;
-        height:   100vh   !important;
-        border:   none    !important;
-        border-radius: 0  !important;
-        box-shadow: none  !important;
-        margin:   0       !important;
-        padding:  0       !important;
-        opacity:  1       !important;
-        visibility: visible !important;
-        transition: none  !important;
-        overflow: hidden  !important;
-        z-index: 9999     !important;
-      }
-      /* Forza l’iframe interno a riempire tutto */
-      #heygen-streaming-container iframe {
-        width:  100% !important;
-        height: 100% !important;
-        border: none !important;
       }
     </style>
   </head>
@@ -45,7 +19,7 @@
       !function(window){
         const host = "https://labs.heygen.com";
         const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
-
+        
         const wrapDiv = document.createElement("div");
         wrapDiv.id = "heygen-streaming-embed";
 
@@ -54,15 +28,15 @@
 
         const stylesheet = document.createElement("style");
         stylesheet.innerHTML = `
-          /* (questo verrà ignorato perché l’override esterno ha !important) */
+          /* verrà ignorato dal nostro inline override */
         `;
 
         const iframe = document.createElement("iframe");
         iframe.allowFullscreen = false;
-        iframe.title = "Streaming Embed";
-        iframe.role = "dialog";
-        iframe.allow = "microphone";
-        iframe.src = url;
+        iframe.title         = "Streaming Embed";
+        iframe.role          = "dialog";
+        iframe.allow         = "microphone";
+        iframe.src           = url;
 
         let visible = false, initial = false;
         window.addEventListener("message", (e) => {
@@ -84,6 +58,28 @@
         wrapDiv.appendChild(stylesheet);
         wrapDiv.appendChild(container);
         document.body.appendChild(wrapDiv);
+
+        // ─── OVERRIDE INLINE PER FULLSCREEN ───
+        Object.assign(wrapDiv.style, {
+          position:    "fixed",
+          top:         "0",
+          left:        "0",
+          width:       "100vw",
+          height:      "100vh",
+          margin:      "0",
+          padding:     "0",
+          border:      "none",
+          borderRadius:"0",
+          boxShadow:   "none",
+          overflow:    "hidden",
+          zIndex:      "9999"
+        });
+        Object.assign(iframe.style, {
+          width:  "100%",
+          height: "100%",
+          border: "none",
+          display:"block"
+        });
       }(globalThis);
     </script>
   </body>
