@@ -1,29 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="utf-8"/>
-  <title>HeyGen Deferred Embed</title>
+  <title>Debug HeyGen Embed</title>
   <style>
-    html, body {
-      margin: 0; padding: 0;
-      width: 100%; height: 100%;
-      overflow: hidden;
-      background: #000; /* sfondo nero mentre non chatta */
-    }
+    html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; }
     #myChatBtn {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 12px 24px;
-      background: #ff3366;
-      color: #fff;
-      font-size: 18px;
-      border: none;
-      border-radius: 24px;
-      cursor: pointer;
-      z-index: 10001;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      padding:12px 24px; background:#ff3366; color:#fff;
+      border:none; border-radius:24px; cursor:pointer;
+      z-index:10001;
     }
   </style>
 </head>
@@ -32,32 +20,46 @@
   <button id="myChatBtn">Chat Now</button>
 
   <script>
-  (function(){
-    const host = "https://labs.heygen.com";
-    const embedUrl = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
+    (function(){
+      console.log("Script di debug caricato");
+      const host = "https://labs.heygen.com";
+      const embedUrl = "https://labs.heygen.com/guest/streaming-embed?share=…&inIFrame=1";
 
-    let container;    // wrapper full-screen
-    let loaded = false;
+      let container, loaded=false;
 
-    // crea wrapper + iframe, ma non lo aggiunge subito
-    function createEmbed() {
-      container = document.createElement("div");
-      Object.assign(container.style, {
-        position: "fixed",
-        top:      "0",
-        left:     "0",
-        right:    "0",
-        bottom:   "0",
-        zIndex:   "9999",
-        overflow: "hidden",
-        display:  "none",  // nascosto finché non serve
+      function createEmbed(){
+        console.log("Creo l'embed HeyGen");
+        container = document.createElement("div");
+        Object.assign(container.style,{
+          position:"fixed", top:"0", left:"0", right:"0", bottom:"0",
+          display:"none", zIndex:"9999", overflow:"hidden"
+        });
+        const iframe = document.createElement("iframe");
+        iframe.src = embedUrl;
+        iframe.allow = "microphone";
+        iframe.allowFullscreen = true;
+        Object.assign(iframe.style,{border:"none", width:"100%", height:"100%"});
+        container.appendChild(iframe);
+        document.body.appendChild(container);
+
+        window.addEventListener("message", e=>{
+          if(e.origin===host && e.data?.type==="streaming-embed" && e.data.action==="hide"){
+            console.log("HeyGen ha chiuso l'embed");
+            container.style.display="none";
+          }
+        });
+
+        loaded = true;
+      }
+
+      const btn = document.getElementById("myChatBtn");
+      btn.addEventListener("click", ()=>{
+        console.log("Hai cliccato Chat Now");
+        if(!loaded) createEmbed();
+        container.style.display = "block";
       });
-      container.id = "heygen-streaming-embed";
+    })();
+  </script>
 
-      const iframe = document.createElement("iframe");
-      iframe.src             = embedUrl;
-      iframe.allow           = "microphone";
-      iframe.allowFullscreen = true;
-      Object.assign(iframe.style, {
-        border: "none",
-        width:  "100%
+</body>
+</html>
