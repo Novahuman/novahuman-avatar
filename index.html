@@ -2,20 +2,21 @@
 <html>
 <head>
   <meta charset="utf-8"/>
-  <title>Nova Human Digital Human</title>
+  <title>HeyGen Hacky Embed</title>
   <style>
     html, body {
       margin:0; padding:0;
       width:100%; height:100%;
       overflow:hidden;
     }
-    /* Il tuo custom button */
+    /* Bottone centrato */
     #myChatBtn {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       padding: 12px 24px;
-      background: #ff3366;     /* scegli il tuo colore */
+      background: #ff3366;
       color: #fff;
       font-size: 16px;
       border: none;
@@ -28,21 +29,19 @@
 </head>
 <body>
 
-  <!-- 1) Script ufficiale HeyGen -->
+  <!-- Script ufficiale HeyGen -->
   <script>
     !function(window){
       const host = "https://labs.heygen.com";
       const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWF...TU1MzYwJ9&inIFrame=1";
 
-      // wrapper full-screen
       const wrap = document.createElement("div");
       Object.assign(wrap.style, {
-        position:   "fixed", top:"0", left:"0", right:"0", bottom:"0",
-        zIndex:     "9999", overflow:"hidden"
+        position:"fixed", top:"0", left:"0", right:"0", bottom:"0",
+        zIndex:"9999", overflow:"hidden"
       });
       wrap.id = "heygen-streaming-embed";
 
-      // container + iframe
       const cont = document.createElement("div");
       cont.id = "heygen-streaming-container";
       cont.style.width  = "100%";
@@ -60,11 +59,9 @@
       wrap.appendChild(cont);
       document.body.appendChild(wrap);
 
-      // appena HeyGen manda il messaggio "init", lo mostriamo full-screen
       window.addEventListener("message", e => {
         if(e.origin===host && e.data?.type==="streaming-embed" && e.data.action==="init"){
           wrap.classList.add("show","expand");
-          // 2) non appena compare il mini-widget, lo nascondiamo
           setTimeout(()=>{
             wrap.querySelector("iframe").style.pointerEvents = "none";
           },500);
@@ -73,12 +70,11 @@
     }(globalThis);
   </script>
 
-  <!-- 3) Il tuo custom Chat button -->
+  <!-- Custom Chat button, ora centrato -->
   <button id="myChatBtn">Chat Now</button>
   <script>
     const wrap = document.getElementById("heygen-streaming-embed");
-    document.getElementById("myChatBtn").addEventListener("click", ()=>{
-      // fai apparire / sparire l’avatar
+    document.getElementById("myChatBtn").addEventListener("click", () => {
       wrap.classList.toggle("expand");
     });
   </script>
