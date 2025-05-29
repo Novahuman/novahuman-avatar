@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>HeyGen Fullscreen Hack</title>
+  <title>HeyGen Deferred Embed</title>
   <style>
     html, body {
       margin: 0; padding: 0;
       width: 100%; height: 100%;
       overflow: hidden;
+      background: #000; /* sfondo nero mentre non chatta */
     }
-    /* Bottone “Chat Now” centrato */
     #myChatBtn {
       position: fixed;
       top: 50%;
@@ -18,71 +18,46 @@
       padding: 12px 24px;
       background: #ff3366;
       color: #fff;
-      font-size: 16px;
+      font-size: 18px;
       border: none;
       border-radius: 24px;
       cursor: pointer;
       z-index: 10001;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
 
-  <!-- 1) Script HeyGen: genera l’iframe ma lo nasconde subito -->
-  <script>
-    !function(window){
-      const host = "https://labs.heygen.com";
-      const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
+  <button id="myChatBtn">Chat Now</button>
 
-      // crea il wrapper full‐screen, ma nascosto
-      const wrap = document.createElement("div");
-      wrap.id = "heygen-streaming-embed";
-      Object.assign(wrap.style, {
+  <script>
+  (function(){
+    const host = "https://labs.heygen.com";
+    const embedUrl = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
+
+    let container;    // wrapper full-screen
+    let loaded = false;
+
+    // crea wrapper + iframe, ma non lo aggiunge subito
+    function createEmbed() {
+      container = document.createElement("div");
+      Object.assign(container.style, {
         position: "fixed",
         top:      "0",
         left:     "0",
         right:    "0",
         bottom:   "0",
-        display:  "none",   // <-- nascosto di default
         zIndex:   "9999",
-        overflow: "hidden"
+        overflow: "hidden",
+        display:  "none",  // nascosto finché non serve
       });
+      container.id = "heygen-streaming-embed";
 
-      // iframe con l’embed vero e proprio
       const iframe = document.createElement("iframe");
-      iframe.src             = url;
+      iframe.src             = embedUrl;
       iframe.allow           = "microphone";
       iframe.allowFullscreen = true;
       Object.assign(iframe.style, {
         border: "none",
-        width:  "100%",
-        height: "100%"
-      });
-
-      wrap.appendChild(iframe);
-      document.body.appendChild(wrap);
-
-      // rendiamo disponibile il wrapper a livello globale
-      window.heygenEmbedWrap = wrap;
-
-      // 3) ascoltiamo il pulsante “X” interno (action==='hide') per chiudere
-      window.addEventListener("message", (e) => {
-        if (e.origin === host && e.data?.type === "streaming-embed" && e.data.action === "hide") {
-          wrap.style.display = "none";
-        }
-      });
-    }(globalThis);
-  </script>
-
-  <!-- 2) Bottone “Chat Now” tuo, al centro -->
-  <button id="myChatBtn">Chat Now</button>
-  <script>
-    document.getElementById("myChatBtn").onclick = () => {
-      // al click mostro il wrapper che contiene l’iframe HeyGen
-      window.heygenEmbedWrap.style.display = "block";
-    };
-  </script>
-
-</body>
-</html>
+        width:  "100%
