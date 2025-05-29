@@ -1,59 +1,87 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>HeyGen Fullscreen Avatar</title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-      }
-    </style>
-  </head>
-  <body>
-    <script>
-      !function(window){
-        const host = "https://labs.heygen.com";
-        const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
+<head>
+  <meta charset="utf-8"/>
+  <title>Nova Human Digital Human</title>
+  <style>
+    html, body {
+      margin:0; padding:0;
+      width:100%; height:100%;
+      overflow:hidden;
+    }
+    /* Il tuo custom button */
+    #myChatBtn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 24px;
+      background: #ff3366;     /* scegli il tuo colore */
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 24px;
+      cursor: pointer;
+      z-index: 10001;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
 
-        // wrapper che copre esattamente tutto lo schermo
-        const wrapDiv = document.createElement("div");
-        Object.assign(wrapDiv.style, {
-          position:     "fixed",
-          top:          "0",
-          right:        "0",
-          bottom:       "0",
-          left:         "0",
-          margin:       "0",
-          padding:      "0",
-          border:       "none",
-          borderRadius: "0",
-          boxShadow:    "none",
-          zIndex:       "9999",
-          overflow:     "hidden"
-        });
+  <!-- 1) Script ufficiale HeyGen -->
+  <script>
+    !function(window){
+      const host = "https://labs.heygen.com";
+      const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWF...TU1MzYwJ9&inIFrame=1";
 
-        // iframe
-        const iframe = document.createElement("iframe");
-        iframe.src               = url;
-        iframe.allow             = "microphone";
-        iframe.title             = "HeyGen Avatar";
-        iframe.allowFullscreen   = true;
-        Object.assign(iframe.style, {
-          border:  "none",
-          width:   "100%",
-          height:  "100%",
-          display: "block",
-          margin:  "0",
-          padding: "0"
-        });
+      // wrapper full-screen
+      const wrap = document.createElement("div");
+      Object.assign(wrap.style, {
+        position:   "fixed", top:"0", left:"0", right:"0", bottom:"0",
+        zIndex:     "9999", overflow:"hidden"
+      });
+      wrap.id = "heygen-streaming-embed";
 
-        wrapDiv.appendChild(iframe);
-        document.body.appendChild(wrapDiv);
-      }(globalThis);
-    </script>
-  </body>
+      // container + iframe
+      const cont = document.createElement("div");
+      cont.id = "heygen-streaming-container";
+      cont.style.width  = "100%";
+      cont.style.height = "100%";
+
+      const iframe = document.createElement("iframe");
+      iframe.src             = url;
+      iframe.allow           = "microphone";
+      iframe.allowFullscreen = true;
+      Object.assign(iframe.style, {
+        border:"none", width:"100%", height:"100%", display:"block"
+      });
+
+      cont.appendChild(iframe);
+      wrap.appendChild(cont);
+      document.body.appendChild(wrap);
+
+      // appena HeyGen manda il messaggio "init", lo mostriamo full-screen
+      window.addEventListener("message", e => {
+        if(e.origin===host && e.data?.type==="streaming-embed" && e.data.action==="init"){
+          wrap.classList.add("show","expand");
+          // 2) non appena compare il mini-widget, lo nascondiamo
+          setTimeout(()=>{
+            wrap.querySelector("iframe").style.pointerEvents = "none";
+          },500);
+        }
+      });
+    }(globalThis);
+  </script>
+
+  <!-- 3) Il tuo custom Chat button -->
+  <button id="myChatBtn">Chat Now</button>
+  <script>
+    const wrap = document.getElementById("heygen-streaming-embed");
+    document.getElementById("myChatBtn").addEventListener("click", ()=>{
+      // fai apparire / sparire l’avatar
+      wrap.classList.toggle("expand");
+    });
+  </script>
+
+</body>
 </html>
