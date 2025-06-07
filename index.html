@@ -1,59 +1,127 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Nova Human Digital Human</title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
+<html lang="it">
+<head>
+  <meta charset="utf-8"/>
+  <title>Nova Human Chat Window</title>
+  <style>
+    /* Reset base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width:100%; height:100%; overflow:hidden; background:#f0f2f5; }
+
+    /* Contenitore finestra chat */
+    #chatWindow {
+      position: fixed;
+      top: 10%;
+      right: 10%;
+      width: 360px;
+      height: 600px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: sans-serif;
+      z-index: 9999;
+    }
+
+    /* Header con logo e pulsante close */
+    #chatHeader {
+      height: 50px;
+      background: #3b3b3b;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+    #chatHeader img {
+      height: 30px;
+    }
+    #chatHeader button {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* Corpo che conterrà l’iframe */
+    #chatBody {
+      flex: 1;
+      position: relative;
+    }
+
+    /* Finestra footer con un piccolo branding o note */
+    #chatFooter {
+      height: 40px;
+      background: #fafafa;
+      text-align: center;
+      line-height: 40px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* Wrapper HeyGen embed */
+    #heygen-container {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+    }
+    /* Forziamo l’iframe a riempire il contenitore */
+    #heygen-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="chatWindow">
+    <div id="chatHeader">
+      <img src="https://tuo-dominio.com/path/al-tuo-logo.png" alt="Logo Nova Human">
+      <button id="chatClose">&times;</button>
+    </div>
+    <div id="chatBody">
+      <!-- Qui verrà iniettato HeyGen -->
+      <div id="heygen-container"></div>
+    </div>
+    <div id="chatFooter">
+      Powered by Nova Human
+    </div>
+  </div>
+
+  <script>
+  (function(window){
+    const host = "https://labs.heygen.com";
+    const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
+
+    // Crea l'iframe e iniettalo nel container
+    const container = document.getElementById("heygen-container");
+    const iframe = document.createElement("iframe");
+    iframe.src             = url;
+    iframe.allow           = "microphone";
+    iframe.allowFullscreen = true;
+    container.appendChild(iframe);
+
+    // Se HeyGen invia “hide” (click su X) nascondiamo la finestra
+    window.addEventListener("message", e => {
+      if (e.origin === host && e.data?.type === "streaming-embed" && e.data.action === "hide") {
+        document.getElementById("chatWindow").style.display = "none";
       }
-    </style>
-  </head>
-  <body>
-    <script>
-      !function(window){
-        const host = "https://labs.heygen.com";
-        const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
+    });
 
-        // wrapper che copre esattamente tutto lo schermo
-        const wrapDiv = document.createElement("div");
-        Object.assign(wrapDiv.style, {
-          position:     "fixed",
-          top:          "0",
-          right:        "0",
-          bottom:       "0",
-          left:         "0",
-          margin:       "0",
-          padding:      "0",
-          border:       "none",
-          borderRadius: "0",
-          boxShadow:    "none",
-          zIndex:       "9999",
-          overflow:     "hidden"
-        });
+    // Chiudi con il pulsante custom
+    document.getElementById("chatClose").onclick = () => {
+      document.getElementById("chatWindow").style.display = "none";
+    };
 
-        // iframe
-        const iframe = document.createElement("iframe");
-        iframe.src               = url;
-        iframe.allow             = "microphone";
-        iframe.title             = "HeyGen Avatar";
-        iframe.allowFullscreen   = true;
-        Object.assign(iframe.style, {
-          border:  "none",
-          width:   "100%",
-          height:  "100%",
-          display: "block",
-          margin:  "0",
-          padding: "0"
-        });
+  })(globalThis);
+  </script>
 
-        wrapDiv.appendChild(iframe);
-        document.body.appendChild(wrapDiv);
-      }(globalThis);
-    </script>
-  </body>
+</body>
 </html>
