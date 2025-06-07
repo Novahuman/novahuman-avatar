@@ -9,6 +9,10 @@
         width:100%; height:100%;
         overflow:hidden;
       }
+      /* Applichiamo una clip all'intero iframe-wrapper */
+      #heygen-streaming-embed {
+        clip-path: inset(0 80px 80px 0); /* top,right,bottom,left */
+      }
     </style>
   </head>
   <body>
@@ -16,14 +20,13 @@
       (function(window){
         const url = "https://labs.heygen.com/guest/streaming-embed?share=…&inIFrame=1";
 
-        // 1) wrapper full-screen
         const wrap = document.createElement("div");
-        Object.assign(wrap.style, {
-          position:"fixed", top:"0", left:"0", right:"0", bottom:"0",
-          zIndex:"9999", overflow:"hidden", margin:"0", padding:"0"
+        wrap.id = "heygen-streaming-embed";
+        Object.assign(wrap.style,{
+          position:"fixed",top:"0",left:"0",right:"0",bottom:"0",
+          zIndex:"9999",overflow:"hidden"
         });
 
-        // 2) iframe HeyGen
         const iframe = document.createElement("iframe");
         iframe.src             = url;
         iframe.allow           = "microphone";
@@ -32,19 +35,6 @@
 
         wrap.appendChild(iframe);
         document.body.appendChild(wrap);
-
-        // 3) logo custom che NON blocca click
-        const logo = document.createElement("img");
-        logo.src = "https://tuo-dominio.com/tuo-logo.png";
-        Object.assign(logo.style, {
-          position:       "fixed",
-          bottom:         "16px",
-          right:          "16px",
-          width:          "80px",
-          pointerEvents:  "none",   // ← fondamentale!
-          zIndex:         "10000"
-        });
-        document.body.appendChild(logo);
       })(globalThis);
     </script>
   </body>
