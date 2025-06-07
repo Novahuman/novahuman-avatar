@@ -2,86 +2,61 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>HeyGen Avatar Embed</title>
+    <title>Nova Human Digital Human</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+    </style>
   </head>
   <body>
     <script>
       !function(window){
         const host = "https://labs.heygen.com";
-        const url = host + "/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
+        const url  = "https://labs.heygen.com/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJLYXR5YV9DaGFpcl9TaXR0aW5nX3B1YmxpYyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3YzL2IxZmY1ZWRiZjk2MjQyZTZhYzk0NjkyMjdkZjQwOTI0XzU1MzYwL3ByZXZpZXdfdGFyZ2V0LndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjUyZTA2YWI1NjUzZjQ2NmE4YzM4Y2Q2NjYwNGQzNzMwIiwidXNlcm5hbWUiOiJjOWM2Njc4OTljODQ0N2MzOWRlNWFmZDcxNGM0Yjk3OCJ9&inIFrame=1";
 
+        // wrapper che copre esattamente tutto lo schermo
         const wrapDiv = document.createElement("div");
-        wrapDiv.id = "heygen-streaming-embed";
-
-        const container = document.createElement("div");
-        container.id = "heygen-streaming-container";
-
-        const stylesheet = document.createElement("style");
-        stylesheet.innerHTML = `
-          #heygen-streaming-embed {
-            z-index: 9999;
-            position: fixed;
-            left: 40px;
-            bottom: 40px;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0px 8px 24px rgba(0,0,0,0.12);
-            transition: all 0.1s linear;
-            overflow: hidden;
-            opacity: 0;
-            visibility: hidden;
-          }
-          #heygen-streaming-embed.show {
-            opacity: 1;
-            visibility: visible;
-          }
-          #heygen-streaming-embed.expand {
-            height: 366px;
-            width: calc(366px * 16 / 9);
-            border: 0;
-            border-radius: 8px;
-          }
-          #heygen-streaming-container {
-            width: 100%;
-            height: 100%;
-          }
-          #heygen-streaming-container iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-          }
-        `;
-
-        const iframe = document.createElement("iframe");
-        iframe.allowFullscreen = false;
-        iframe.title = "Streaming Embed";
-        iframe.role = "dialog";
-        iframe.allow = "microphone";
-        iframe.src = url;
-
-        let visible = false, initial = false;
-        window.addEventListener("message", (e) => {
-          if (e.origin === host && e.data?.type === "streaming-embed") {
-            if (e.data.action === "init") {
-              initial = true;
-              wrapDiv.classList.toggle("show", initial);
-            } else if (e.data.action === "show") {
-              visible = true;
-              wrapDiv.classList.toggle("expand", visible);
-            } else if (e.data.action === "hide") {
-              visible = false;
-              wrapDiv.classList.toggle("expand", visible);
-            }
-          }
+        Object.assign(wrapDiv.style, {
+          position:     "fixed",
+          top:          "0",
+          right:        "0",
+          bottom:       "0",
+          left:         "0",
+          margin:       "0",
+          padding:      "0",
+          border:       "none",
+          borderRadius: "0",
+          boxShadow:    "none",
+          zIndex:       "9999",
+          overflow:     "hidden"
         });
 
-        container.appendChild(iframe);
-        wrapDiv.appendChild(stylesheet);
-        wrapDiv.appendChild(container);
+        // iframe
+        const iframe = document.createElement("iframe");
+        iframe.src               = url;
+        iframe.allow             = "microphone";
+        iframe.title             = "HeyGen Avatar";
+        iframe.allowFullscreen   = true;
+        Object.assign(iframe.style, {
+          border:  "none",
+          width:   "100%",
+          height:  "100%",
+          display: "block",
+          margin:  "0",
+          padding: "0"
+        });
+
+        wrapDiv.appendChild(iframe);
         document.body.appendChild(wrapDiv);
       }(globalThis);
     </script>
   </body>
 </html>
+
+
+ChatGPT
